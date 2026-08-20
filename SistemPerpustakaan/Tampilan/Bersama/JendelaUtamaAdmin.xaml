@@ -1,0 +1,193 @@
+<Window x:Class="SistemPerpustakaan.Tampilan.Bersama.JendelaUtamaAdmin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:komponen="clr-namespace:SistemPerpustakaan.Tampilan.Komponen"
+        Title="Dasbor Admin — Sistem Perpustakaan"
+        Height="720" Width="1280" MinHeight="600" MinWidth="1000"
+        WindowStartupLocation="CenterScreen" Background="#F1F5F9">
+    <Window.Resources>
+        <!-- Nav button default -->
+        <Style x:Key="TombolNav" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="46"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="20,0,20,0"/>
+            <Setter Property="FontSize" Value="13.5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Margin="8,2">
+                            <!-- Indikator kiri (tidak aktif = transparan) -->
+                            <Border x:Name="Indikator" Width="3" HorizontalAlignment="Left"
+                                    CornerRadius="0,2,2,0" Background="Transparent"
+                                    VerticalAlignment="Stretch"/>
+                            <!-- Background tombol -->
+                            <Border x:Name="Bg" Background="{TemplateBinding Background}"
+                                    CornerRadius="8" Margin="0,0,0,0">
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#293548"/>
+                                <Setter Property="Foreground" Value="#CBD5E1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Nav button aktif -->
+        <Style x:Key="TombolNavAktif" TargetType="Button" BasedOn="{StaticResource TombolNav}">
+            <Setter Property="Background" Value="#1E3A5F"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Margin="8,2">
+                            <!-- Indikator kiri aktif (biru cerah) -->
+                            <Border Width="3" HorizontalAlignment="Left"
+                                    CornerRadius="0,2,2,0" Background="#60A5FA"
+                                    VerticalAlignment="Stretch"/>
+                            <!-- Background tombol aktif -->
+                            <Border Background="#1E3A5F" CornerRadius="8">
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Root Grid: sidebar + content -->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══ SIDEBAR ═══════════════════════════════════════════════ -->
+        <Border Grid.Column="0" Background="#1E293B">
+            <DockPanel>
+                <!-- Logo -->
+                <Border DockPanel.Dock="Top" Padding="22,22,20,16"
+                        BorderBrush="#334155" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="38" Height="38" CornerRadius="10"
+                                Background="#2563EB" Margin="0,0,12,0">
+                            <TextBlock Text="📚" FontSize="20"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Perpustakaan" FontSize="15" FontWeight="Bold" Foreground="White"/>
+                            <TextBlock Text="Panel Administrator" FontSize="10" Foreground="#475569" Margin="0,1,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Info admin -->
+                <Border DockPanel.Dock="Top" Padding="22,14"
+                        BorderBrush="#334155" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="36" Height="36" CornerRadius="18" Background="#7C3AED">
+                            <TextBlock x:Name="InisialAdmin" Text="A" FontSize="15"
+                                       FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="NamaAdmin" Text="Administrator"
+                                       FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                            <TextBlock Text="Administrator" FontSize="10" Foreground="#475569"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Tombol Keluar -->
+                <Border DockPanel.Dock="Bottom" Padding="8,12"
+                        BorderBrush="#334155" BorderThickness="0,1,0,0">
+                    <Button Content="🚪  Keluar" Style="{StaticResource TombolNav}"
+                            Foreground="#F87171" Click="TombolKeluar_Click"/>
+                </Border>
+
+                <!-- Menu navigasi -->
+                <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                    <StackPanel Margin="0,16,0,0">
+                        <TextBlock Text="MENU UTAMA" FontSize="10" FontWeight="Bold"
+                                   Foreground="#334155" Margin="22,4,0,6"/>
+                        <Button x:Name="BtnDasbord"        Content="📊  Dashboard"         Style="{StaticResource TombolNavAktif}" Click="BtnDasbord_Click"/>
+                        <Button x:Name="BtnKelolaBuku"     Content="📖  Kelola Buku"       Style="{StaticResource TombolNav}"     Click="BtnKelolaBuku_Click"/>
+                        <Button x:Name="BtnKelolaPengguna" Content="👥  Kelola Pengguna"   Style="{StaticResource TombolNav}"     Click="BtnKelolaPengguna_Click"/>
+
+                        <TextBlock Text="TRANSAKSI" FontSize="10" FontWeight="Bold"
+                                   Foreground="#334155" Margin="22,16,0,6"/>
+                        <Button x:Name="BtnPeminjaman"   Content="📤  Peminjaman"          Style="{StaticResource TombolNav}"     Click="BtnPeminjaman_Click"/>
+                        <Button x:Name="BtnPengembalian" Content="📥  Pengembalian"        Style="{StaticResource TombolNav}"     Click="BtnPengembalian_Click"/>
+                        <Button x:Name="BtnDenda"        Content="💰  Denda"               Style="{StaticResource TombolNav}"     Click="BtnDenda_Click"/>
+
+                        <TextBlock Text="LAPORAN" FontSize="10" FontWeight="Bold"
+                                   Foreground="#334155" Margin="22,16,0,6"/>
+                        <Button x:Name="BtnLaporan"      Content="📋  Ekspor Laporan"      Style="{StaticResource TombolNav}"     Click="BtnLaporan_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- ═══ AREA KONTEN ══════════════════════════════════════════ -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Topbar -->
+            <Border Grid.Row="0" Background="White"
+                    BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                <Grid Margin="24,0">
+                    <!-- Judul halaman -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="20" CornerRadius="2"
+                                Background="#2563EB" Margin="0,0,12,0"/>
+                        <TextBlock x:Name="JudulHalaman" Text="Dashboard"
+                                   FontSize="17" FontWeight="Bold" Foreground="#1E293B"/>
+                    </StackPanel>
+
+                    <!-- Kanan: jam + avatar -->
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                            <TextBlock x:Name="TeksTanggal" FontSize="11"
+                                       Foreground="#94A3B8" TextAlignment="Right"/>
+                            <TextBlock x:Name="TeksJam" FontSize="14" FontWeight="Bold"
+                                       Foreground="#1E293B" TextAlignment="Right"/>
+                        </StackPanel>
+                        <!-- Divider -->
+                        <Border Width="1" Height="32" Background="#E2E8F0" Margin="0,0,16,0"/>
+                        <!-- Avatar mini -->
+                        <Border Width="36" Height="36" CornerRadius="18" Background="#7C3AED">
+                            <TextBlock x:Name="InisialTopbar" Text="A" FontSize="14"
+                                       FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Frame konten -->
+            <Frame x:Name="BingkaiKonten" Grid.Row="1"
+                   NavigationUIVisibility="Hidden" Background="Transparent"/>
+        </Grid>
+
+        <!-- ═══ TOAST NOTIFICATION (overlay, pojok kanan bawah) ═══════ -->
+        <komponen:ToastNotifikasi x:Name="ToastAdmin"
+                                  Grid.Column="1" Grid.RowSpan="2"/>
+    </Grid>
+</Window>

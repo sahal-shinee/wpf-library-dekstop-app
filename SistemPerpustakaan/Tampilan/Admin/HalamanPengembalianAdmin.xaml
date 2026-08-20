@@ -1,0 +1,392 @@
+<Page x:Class="SistemPerpustakaan.Tampilan.Admin.HalamanPengembalianAdmin"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      Background="#F8FAFC"
+      FontFamily="Segoe UI">
+
+    <Page.Resources>
+        <DropShadowEffect x:Key="SoftShadow" BlurRadius="15" ShadowDepth="3" Opacity="0.06" Direction="270" Color="#0F172A"/>
+    </Page.Resources>
+
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="RootGrid"
+                                     Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:0.32"/>
+                    <DoubleAnimation Storyboard.TargetName="SlideRoot"
+                                     Storyboard.TargetProperty="Y"
+                                     From="16" To="0" Duration="0:0:0.32">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Page.Triggers>
+
+    <Grid x:Name="RootGrid" Margin="30">
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="SlideRoot"/>
+        </Grid.RenderTransform>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- PANEL PROSES PENGEMBALIAN -->
+        <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,25" Effect="{StaticResource SoftShadow}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <Border Width="40" Height="40" CornerRadius="20" Background="#F0FDF4" Margin="0,0,15,0">
+                        <TextBlock Text="📥" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Proses Pengembalian Buku" FontSize="18" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <TextBlock Text="ID Peminjaman:" FontSize="13" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="#475569" FontWeight="SemiBold"/>
+                        <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Background="White" Width="200">
+                            <TextBox x:Name="KotakIdPeminjaman" Padding="15,12" FontSize="14" BorderThickness="0" Background="Transparent" Foreground="#0F172A"/>
+                        </Border>
+                        <Button Content="Cari Data" Style="{StaticResource TombolSekunder}" Height="45" Margin="15,0,0,0" Padding="20,0" Click="TombolCari_Click"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Info peminjaman ditemukan -->
+                <Border x:Name="PanelInfoPinjam" Visibility="Collapsed" Background="#F0F9FF" BorderBrush="#BAE6FD" BorderThickness="1" CornerRadius="8" Padding="20,15" Margin="0,20,0,0">
+                    <StackPanel>
+                        <TextBlock x:Name="TeksInfoPinjam" FontSize="14" Foreground="#0369A1" FontWeight="Medium"/>
+                        <TextBlock x:Name="TeksBatasKembali" FontSize="14" Foreground="#DC2626" FontWeight="Bold" Margin="0,6,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Daftar buku yang bisa dikembalikan -->
+                <StackPanel x:Name="PanelDaftarBuku" Visibility="Collapsed" Margin="0,20,0,0">
+                    <TextBlock Text="Pilih buku yang dikembalikan serta kondisinya:" FontSize="14" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,12"/>
+                    <ItemsControl x:Name="DaftarBukuPinjam">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="180"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding Dipilih}" VerticalAlignment="Center" Margin="0,0,15,0">
+                                            <CheckBox.LayoutTransform>
+                                                <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
+                                            </CheckBox.LayoutTransform>
+                                        </CheckBox>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding JudulBuku}" FontWeight="Bold" FontSize="14" Foreground="#0F172A"/>
+                                            <TextBlock Text="{Binding PenulisBuku}" FontSize="13" Foreground="#64748B" Margin="0,4,0,0"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="2" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Background="White">
+                                            <ComboBox Loaded="KondisiComboBox_Loaded" SelectionChanged="KondisiComboBox_Changed" FontSize="13" Height="40" BorderThickness="0" Background="Transparent" Padding="10,0" VerticalContentAlignment="Center">
+                                                <sys:String>baik</sys:String>
+                                                <sys:String>rusak_ringan</sys:String>
+                                                <sys:String>rusak_berat</sys:String>
+                                                <sys:String>hilang</sys:String>
+                                            </ComboBox>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button Content="✅ Proses Pengembalian Terpilih" Style="{StaticResource TombolUtama}" Background="#16A34A" Height="48" Margin="0,15,0,0" Click="TombolProses_Click" FontSize="14"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- RIWAYAT PENGEMBALIAN -->
+        <Border Grid.Row="1" Background="White" CornerRadius="12" Effect="{StaticResource SoftShadow}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Judul Seksi -->
+                <Border Grid.Row="0" Padding="25,20,25,15" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="36" Height="36" CornerRadius="8" Background="#EFF6FF" Margin="0,0,15,0">
+                            <TextBlock Text="📋" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="Riwayat Pengembalian" FontSize="16" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Grid.Row="1" x:Name="TeksInfo" Text="Memuat..." FontSize="13" Foreground="#64748B" Margin="25,10,0,10"/>
+
+                <!-- Header Tabel Custom -->
+                <Border Grid.Row="1" Background="#F8FAFC" Padding="25,12" Margin="0,40,0,0" BorderBrush="#E2E8F0" BorderThickness="0,1,0,1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="160"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="ID" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Grid.Column="1" Text="Nama Peminjam" FontSize="12" FontWeight="SemiBold" Foreground="#64748B" Margin="15,0,0,0"/>
+                        <TextBlock Grid.Column="2" Text="Tgl Kembali" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Grid.Column="3" Text="Status" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Grid.Column="4" Text="Ada Denda" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Grid.Column="5" Text="Catatan" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <TextBlock Grid.Column="6" Text="Aksi" FontSize="12" FontWeight="SemiBold" Foreground="#64748B" HorizontalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- DataGrid -->
+                <Grid Grid.Row="2">
+                    <DataGrid x:Name="TabelKembali" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" GridLinesVisibility="None" HeadersVisibility="None" Background="White" BorderThickness="0" RowHeight="55" SelectionMode="Single" AlternatingRowBackground="#F8FAFC">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="BorderBrush" Value="#F1F5F9"/>
+                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#F0FDF4"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#DCFCE7"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+
+                        <DataGrid.Columns>
+                            <!-- ID -->
+                            <DataGridTextColumn Binding="{Binding IdPengembalian}" Width="60">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Padding" Value="25,0,0,0"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Foreground" Value="#64748B"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Nama Peminjam -->
+                            <DataGridTextColumn Binding="{Binding NamaPeminjam}" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Padding" Value="15,0,0,0"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="Foreground" Value="#0F172A"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Tanggal Kembali -->
+                            <DataGridTextColumn Binding="{Binding TanggalKembali, StringFormat=dd/MM/yyyy}" Width="120">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Foreground" Value="#475569"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Badge Status Kembali -->
+                            <DataGridTemplateColumn Width="130">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="12" Padding="12,6" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#EFF6FF">
+                                            <TextBlock Text="{Binding TampilJenis}" FontSize="12" FontWeight="SemiBold" Foreground="#2563EB"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Badge Denda -->
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="12" Padding="12,6" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#F1F5F9"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding AdaDenda}" Value="True">
+                                                            <Setter Property="Background" Value="#FEF2F2"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding TampilAdaDenda}" FontSize="12" FontWeight="SemiBold">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="#64748B"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AdaDenda}" Value="True">
+                                                                <Setter Property="Foreground" Value="#DC2626"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Catatan -->
+                            <DataGridTextColumn Binding="{Binding Catatan}" Width="120">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Foreground" Value="#64748B"/>
+                                        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Aksi (Detail & Hapus) -->
+                            <DataGridTemplateColumn Width="160">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <!-- Tombol Detail -->
+                                            <Button Tag="{Binding IdPengembalian}" Click="TombolDetail_Click" Background="Transparent" BorderThickness="0" Cursor="Hand" Padding="0" Margin="0,0,8,0">
+                                                <Border Background="#EFF6FF" CornerRadius="6" Padding="12,6">
+                                                    <TextBlock Text="Detail" FontSize="12" FontWeight="SemiBold" Foreground="#2563EB"/>
+                                                </Border>
+                                            </Button>
+
+                                            <!-- Tombol Hapus -->
+                                            <Button Tag="{Binding IdPengembalian}" Click="TombolHapusPengembalian_Click" Background="Transparent" BorderThickness="0" Cursor="Hand" Padding="0">
+                                                <Border x:Name="BgHapus" Background="#FEF2F2" CornerRadius="6" Padding="12,6">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="🗑" FontSize="12" Foreground="#DC2626" Margin="0,0,4,0"/>
+                                                        <TextBlock Text="Hapus" FontSize="12" FontWeight="SemiBold" Foreground="#DC2626"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Empty state -->
+                    <Border x:Name="PanelKosong" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="40">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="📥" FontSize="50" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                            <TextBlock Text="Belum ada riwayat pengembalian" FontSize="16" FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Proses pengembalian buku untuk melihat riwayatnya." FontSize="14" Foreground="#64748B" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Paging controls (MENGGANTI PADDING MENJADI MARGIN) -->
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+                    <Button Click="TombolPrev_Click" Style="{StaticResource TombolSekunder}" Padding="15,8" Margin="0,0,10,0">Sebelumnya</Button>
+                    <Button Click="TombolNext_Click" Style="{StaticResource TombolSekunder}" Padding="15,8">Selanjutnya</Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ═══════ OVERLAY DETAIL PENGEMBALIAN ═══════ -->
+        <Border x:Name="OverlayDetail" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed" Background="#800F172A" Panel.ZIndex="10">
+            <Border Background="White" CornerRadius="16" Width="650" MaxHeight="550" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="30" ShadowDepth="5" Opacity="0.25" Color="#000"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header Overlay -->
+                    <Border Grid.Row="0" Padding="25,20" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="8" Background="#EFF6FF" Margin="0,0,15,0">
+                                    <TextBlock Text="📋" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock x:Name="JudulOverlay" Text="Detail Pengembalian" FontSize="18" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button HorizontalAlignment="Right" VerticalAlignment="Center" Click="TombolTutupOverlay_Click" Style="{StaticResource TombolSekunder}" Width="36" Height="36" Padding="0" Content="✕" ToolTip="Tutup Detail"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Daftar buku yang dikembalikan -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25,20">
+                        <ItemsControl x:Name="DaftarDetailKembali">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="10" Padding="20" Margin="0,0,0,15">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                                <TextBlock Text="{Binding JudulBuku}" FontWeight="Bold" FontSize="15" Foreground="#0F172A"/>
+                                                <TextBlock Text=" — " FontSize="14" Foreground="#94A3B8"/>
+                                                <TextBlock Text="{Binding PenulisBuku}" FontSize="14" Foreground="#64748B"/>
+                                            </StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Kondisi Buku" FontSize="12" Foreground="#64748B" Margin="0,0,0,4"/>
+                                                    <TextBlock Text="{Binding TampilKondisi}" FontSize="14" FontWeight="Bold" Foreground="#334155"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="Denda Terlambat" FontSize="12" Foreground="#64748B" Margin="0,0,0,4"/>
+                                                    <TextBlock Text="{Binding TampilDendaTerlambat}" FontSize="14" FontWeight="Bold" Foreground="#334155"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Text="Denda Kondisi" FontSize="12" Foreground="#64748B" Margin="0,0,0,4"/>
+                                                    <TextBlock Text="{Binding TampilDendaKondisi}" FontSize="14" FontWeight="Bold" Foreground="#DC2626"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Footer Overlay: Grand Total -->
+                    <Border Grid.Row="2" Padding="30,20" BorderBrush="#F1F5F9" BorderThickness="0,1,0,0" Background="#F8FAFC" CornerRadius="0,0,16,16">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Total Denda: " FontSize="15" Foreground="#475569" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TeksTotalDenda" Text="—" FontSize="18" FontWeight="Bold" Foreground="#DC2626" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                            </StackPanel>
+                            <Button HorizontalAlignment="Right" Content="Tutup Jendela" Click="TombolTutupOverlay_Click" Style="{StaticResource TombolSekunder}" Padding="20,10"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Border>
+    </Grid>
+</Page>

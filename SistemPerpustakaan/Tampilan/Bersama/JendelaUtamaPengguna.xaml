@@ -1,0 +1,166 @@
+<Window x:Class="SistemPerpustakaan.Tampilan.Bersama.JendelaUtamaPengguna"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:komponen="clr-namespace:SistemPerpustakaan.Tampilan.Komponen"
+        Title="Perpustakaan Digital" Height="700" Width="1200"
+        MinHeight="580" MinWidth="900"
+        WindowStartupLocation="CenterScreen" Background="#F8FAFC">
+    <Window.Resources>
+        <Style x:Key="TombolNavUser" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="18,0,16,0"/>
+            <Setter Property="FontSize" Value="13.5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Margin="6,2">
+                            <!-- Indikator kiri -->
+                            <Border x:Name="Indikator" Width="3" HorizontalAlignment="Left"
+                                    CornerRadius="0,2,2,0" Background="Transparent"
+                                    VerticalAlignment="Stretch"/>
+                            <Border x:Name="Bg" Background="{TemplateBinding Background}"
+                                    CornerRadius="8">
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#EFF6FF"/>
+                                <Setter Property="Foreground" Value="#2563EB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TombolNavUserAktif" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#2563EB"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="18,0,16,0"/>
+            <Setter Property="FontSize" Value="13.5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Margin="6,2">
+                            <!-- Indikator kiri aktif (biru) -->
+                            <Border Width="3" HorizontalAlignment="Left"
+                                    CornerRadius="0,2,2,0" Background="#2563EB"
+                                    VerticalAlignment="Stretch"/>
+                            <Border Background="#EFF6FF" CornerRadius="8">
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══ SIDEBAR PENGGUNA ════════════════════════════════════ -->
+        <Border Grid.Column="0" Background="White"
+                BorderBrush="#E2E8F0" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <!-- Logo -->
+                <Border DockPanel.Dock="Top" Padding="20,22,20,14"
+                        BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="36" Height="36" CornerRadius="10"
+                                Background="#0891B2" Margin="0,0,10,0">
+                            <TextBlock Text="📚" FontSize="18"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Perpustakaan" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                            <TextBlock Text="Portal Anggota" FontSize="10" Foreground="#94A3B8" Margin="0,1,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Info pengguna -->
+                <Border DockPanel.Dock="Top" Padding="20,14"
+                        BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="36" Height="36" CornerRadius="18" Background="#0891B2">
+                            <TextBlock x:Name="InisialUser" Text="U" FontSize="15"
+                                       FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="NamaUser" Text="Pengguna"
+                                       FontSize="13" FontWeight="SemiBold" Foreground="#1E293B"/>
+                            <TextBlock Text="Anggota" FontSize="10" Foreground="#94A3B8"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Keluar -->
+                <Border DockPanel.Dock="Bottom" Padding="6,12"
+                        BorderBrush="#E2E8F0" BorderThickness="0,1,0,0">
+                    <Button Content="🚪  Keluar" Style="{StaticResource TombolNavUser}"
+                            Foreground="#EF4444" Click="TombolKeluar_Click"/>
+                </Border>
+
+                <!-- Menu -->
+                <StackPanel Margin="0,16,0,0">
+                    <TextBlock Text="MENU" FontSize="10" FontWeight="Bold"
+                               Foreground="#CBD5E1" Margin="22,0,0,6"/>
+                    <Button x:Name="BtnBerandaUser"   Content="🏠  Beranda"              Style="{StaticResource TombolNavUserAktif}" Click="BtnBeranda_Click"/>
+                    <Button x:Name="BtnCariPinjam"    Content="🔍  Cari &amp; Pinjam Buku" Style="{StaticResource TombolNavUser}"     Click="BtnCariPinjam_Click"/>
+                    <Button x:Name="BtnRiwayatPinjam" Content="📋  Riwayat Pinjam"       Style="{StaticResource TombolNavUser}"     Click="BtnRiwayat_Click"/>
+                    <Button x:Name="BtnDendaUser"     Content="💰  Status Denda"         Style="{StaticResource TombolNavUser}"     Click="BtnDenda_Click"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- ═══ KONTEN PENGGUNA ══════════════════════════════════════ -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Topbar -->
+            <Border Grid.Row="0" Background="White"
+                    BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                <Grid Margin="24,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="18" CornerRadius="2"
+                                Background="#0891B2" Margin="0,0,12,0"/>
+                        <TextBlock x:Name="JudulHalaman" Text="Beranda"
+                                   FontSize="16" FontWeight="Bold" Foreground="#1E293B"/>
+                    </StackPanel>
+                    <TextBlock x:Name="TeksTanggal"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                               FontSize="12" Foreground="#94A3B8"/>
+                </Grid>
+            </Border>
+
+            <Frame x:Name="BingkaiKonten" Grid.Row="1"
+                   NavigationUIVisibility="Hidden" Background="Transparent"/>
+        </Grid>
+
+        <!-- ═══ TOAST NOTIFICATION ════════════════════════════════ -->
+        <komponen:ToastNotifikasi x:Name="ToastUser"
+                                  Grid.Column="1" Grid.RowSpan="2"/>
+    </Grid>
+</Window>

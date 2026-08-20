@@ -1,0 +1,62 @@
+<Window x:Class="SistemPerpustakaan.Tampilan.Bersama.JendelaSplash"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Memuat..." Height="320" Width="480"
+        WindowStartupLocation="CenterScreen" WindowStyle="None"
+        AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" Topmost="True">
+    <Border CornerRadius="16" Background="White">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Opacity="0.15" Color="#000"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="72"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" VerticalAlignment="Center"
+                        HorizontalAlignment="Center" Margin="40,32">
+                <TextBlock Text="📚" FontSize="52"
+                           HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                <TextBlock Text="Sistem Manajemen Perpustakaan"
+                           FontSize="20" FontWeight="Bold" Foreground="#1E293B"
+                           HorizontalAlignment="Center" TextAlignment="Center"/>
+                <TextBlock Text="Mempersiapkan sistem..."
+                           FontSize="13" Foreground="#64748B"
+                           HorizontalAlignment="Center" Margin="0,6,0,0"/>
+            </StackPanel>
+
+            <!-- Progress bar animasi -->
+            <Border Grid.Row="1" Height="5" CornerRadius="2.5"
+                    Background="#E2E8F0" Margin="40,0">
+                <Border x:Name="ProgressBar" CornerRadius="2.5"
+                        Background="#2563EB" HorizontalAlignment="Left" Width="0">
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetProperty="Width"
+                                                     From="0" To="400" Duration="0:0:1.8"
+                                                     AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Border.Triggers>
+                </Border>
+            </Border>
+
+            <!-- Teks status -->
+            <Border Grid.Row="2" Background="#F8FAFC"
+                    CornerRadius="0,0,16,16" Padding="40,0">
+                <TextBlock x:Name="TeksPesan"
+                           Text="Menghubungkan ke database..."
+                           FontSize="13" Foreground="#475569"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap" TextAlignment="Center"/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
